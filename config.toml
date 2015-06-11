@@ -1,0 +1,8 @@
+stations = [
+  "Münchnerplatz",
+  #"Nürnberger Platz",
+  #"Hauptbahnhof",
+  "Helmholzstraße",
+]
+
+multithreaded = false  # not yet implemented

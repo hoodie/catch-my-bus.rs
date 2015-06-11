@@ -1,0 +1,14 @@
+[package]
+name = "catch_my_bus"
+version = "0.1.0"
+authors = ["Hendrik Sollich <hendrik@hoodie.de>"]
+
+[dependencies]
+hyper = "0.3.12"
+rustc-serialize = "0.3.12"
+toml = "0.1"
+url = "*"
+
+[dependencies.notify-rust]
+git = "https://github.com/hoodie/notify-rust.git"
+

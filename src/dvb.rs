@@ -27,7 +27,7 @@ fn get_content(url: Url) -> String
 
 fn get_content_offline() -> String
 {
-    let mut file = File::open(&Path::new("./hauptbahnhof.js")).ok().expect("io error");
+    let mut file = File::open(&Path::new("./kaitzerstrasse.js")).ok().expect("io error");
     //let mut file = File::open(&Path::new("./kaitzerstrasse.js")).ok().expect("io error");
     let mut string = String::new();
     file.read_to_string(&mut string).ok().expect("read error");
@@ -47,15 +47,15 @@ pub fn get_station_json(station: &str) -> Json
     return data
 }
 
-pub fn group_by_line(data: &Json) -> HashMap<String, Vec<&str>>
+pub fn group_by_line(data: &Json) -> HashMap<String, Vec<String>>
 {
-    let mut map: HashMap<String, Vec<&str>>= HashMap::new();
+    let mut map: HashMap<String, Vec<String>> = HashMap::new();
     if let Some(list) = data.as_array() {
         for arrival in list {
             let line = arrival[0].as_string().unwrap();
             let direction = arrival[1].as_string().unwrap();
-            let route = line.to_string() + " " + direction;
-            let time = arrival[2].as_string().unwrap();
+            let route = format!("{} {}", line.to_string(),  direction);
+            let time = format!("{}min ", arrival[2].as_string().unwrap());
 
             let mut list = map.entry(route).or_insert(vec![]);
             list.push(time);

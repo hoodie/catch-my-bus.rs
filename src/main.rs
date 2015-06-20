@@ -14,13 +14,12 @@ fn main() {
         let map = dvb::group_by_line(&json);
         for (k, v) in map{
 
-            println!("{}:\n {:?}-", &k,&v);
+            let body = &format!("{}:\n {}", &k,v.connect(", "));
             Notification::new()
-                .body(&format!("{}:\n {:?}-", &k,&v))
                 .appname(&format!("catch_my_bus {}", &k))
-                .summary(&station)
                 .icon("/home/hendrik/code/rust/catch_my_bus/Bushaltestelle.png")
-                .show();
+                .summary(&station)
+                .body(body).show_debug();
         }
 
     }

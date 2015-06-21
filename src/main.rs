@@ -14,7 +14,7 @@ fn main() {
         let map = dvb::group_by_line(&json);
         for (k, v) in map{
 
-            let body = &format!("{}:\n {}", &k,v.connect(", "));
+            let body = &format!("{}:\n  {}", &k,v.connect(", "));
             Notification::new()
                 .appname(&format!("catch_my_bus {}", &k))
                 .icon("/home/hendrik/code/rust/catch_my_bus/Bushaltestelle.png")

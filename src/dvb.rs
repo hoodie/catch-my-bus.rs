@@ -25,6 +25,7 @@ fn get_content(url: Url) -> String
     body
 }
 
+#[allow(unused)]
 fn get_content_offline() -> String
 {
     let mut file = File::open(&Path::new("./kaitzerstrasse.js")).ok().expect("io error");

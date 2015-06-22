@@ -1,8 +1,10 @@
 stations = [
   #"Münchnerplatz",
   #"Nürnberger Platz",
-  #"Hauptbahnhof",
+  "Hauptbahnhof",
   "Helmholzstraße",
 ]
+
+sleep_time = 30 # seconds
 
 multithreaded = false  # not yet implemented

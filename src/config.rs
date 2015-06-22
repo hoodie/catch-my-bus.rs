@@ -5,7 +5,13 @@ use std::io::Read;
 use std::path::{Path};
 use std::error::Error;
 
-pub fn read_config() -> Vec<String>
+pub struct Config
+{
+    pub sleep_time: i64,
+    pub stations: Vec<String>
+}
+
+pub fn read_config() -> Config
 {
     let config_path = Path::new("./config.toml");
     let mut file = match File::open(&config_path){
@@ -25,7 +31,11 @@ pub fn read_config() -> Vec<String>
     for station in config.lookup("stations").unwrap().as_slice().unwrap() {
         stations_vec.push((station.as_str().unwrap().to_string())) }
 
-    return stations_vec
+    let sleep_time = config.lookup("sleep_time").unwrap().as_integer();
+    Config{
+        sleep_time: sleep_time.unwrap_or(30) * 1000,
+        stations: stations_vec
+    }
 }
 
 

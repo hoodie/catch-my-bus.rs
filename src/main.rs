@@ -7,8 +7,8 @@ mod config;
 mod dvb;
 use notify_rust::Notification;
 
-fn main() {
-    let stations = config::read_config();
+fn run() {
+    let config::Config{sleep_time:_, stations:stations} = config::read_config();
     loop{
         for station in &stations{
             match dvb::get_station_json(station){
@@ -20,7 +20,7 @@ fn main() {
                             .appname(&format!("catch_my_bus {}", &k))
                             .icon("/home/hendrik/code/rust/catch_my_bus/Bushaltestelle.png")
                             .summary(&station)
-                            .body(body).show_debug();
+                            .body(body).show();
                     }
                 },
                 Err(error) => {
@@ -39,3 +39,13 @@ fn main() {
     }
 }
 
+
+use std::thread;
+fn main()
+{
+    thread::spawn(move||{run()});
+    println!("Press enter to exit.");
+    let mut devnull= String::new();
+    std::io::stdin().read_line(&mut devnull);
+    println!("Thank you for choosing catch_my_bus-rs.");
+}

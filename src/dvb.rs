@@ -2,6 +2,7 @@
 extern crate url;
 extern crate hyper;
 extern crate rustc_serialize;
+extern crate time;
 
 use std::fs::File;
 use std::io::Read;
@@ -11,18 +12,24 @@ use url::{Url};
 use hyper::Client;
 use rustc_serialize::json::Json;
 
+
 const VVO_URL:&'static str = "http://widgets.vvo-online.de/abfahrtsmonitor/Abfahrten.do?ort=Dresden&vz=0&hst=";
 
 #[allow(dead_code)]
-fn get_content(url: Url) -> String
+fn get_content(url: Url) -> Result<String, hyper::status::StatusCode>
 {
     let mut client = Client::new();
     let mut res = client.get(url).send().unwrap();
-    assert_eq!(res.status, hyper::Ok);
+    match res.status
+    {
+        hyper::Ok => {
+            let mut body = String::new();
+            res.read_to_string(&mut body).unwrap();
+            return Ok(body)
+        },
+        _ => (Err(res.status)),
+    }
     // Read the Response.
-    let mut body = String::new();
-    res.read_to_string(&mut body).unwrap();
-    body
 }
 
 #[allow(unused)]
@@ -35,17 +42,14 @@ fn get_content_offline() -> String
     string
 }
 
-pub fn get_station_json(station: &str) -> Json
+pub fn get_station_json(station: &str) -> Result<Json,hyper::status::StatusCode>
 {
     #![allow(unused_variables)]
     let url: Url = Url::parse(
         &(VVO_URL.to_string() + station)
         ).unwrap();
     //println!("getting \"{}\" ({})", &station, &url);
-    let json_str = get_content(url);
-    //let json_str = get_content_offline();
-    let data = Json::from_str(&json_str).unwrap();
-    return data
+    return get_content(url).map(|str| Json::from_str(&str).unwrap());
 }
 
 pub fn group_by_line(data: &Json) -> HashMap<String, Vec<String>>
@@ -56,10 +60,12 @@ pub fn group_by_line(data: &Json) -> HashMap<String, Vec<String>>
             let line = arrival[0].as_string().unwrap();
             let direction = arrival[1].as_string().unwrap();
             let route = format!("{} {}", line.to_string(),  direction);
-            let time = format!("{}min ", arrival[2].as_string().unwrap());
+            let minutes_string = arrival[2].as_string().unwrap();
+            //let minutes = time::Duration::minutes(minutes_string.parse::<i64>().unwrap_or(-1));
+            let wait = format!("{}min ", minutes_string);
 
             let mut list = map.entry(route).or_insert(vec![]);
-            list.push(time);
+            list.push(wait);
         }
     }
     return map;

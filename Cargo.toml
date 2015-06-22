@@ -7,6 +7,7 @@ authors = ["Hendrik Sollich <hendrik@hoodie.de>"]
 hyper = "0.5"
 rustc-serialize = "0.3"
 toml = "0.1"
+time = "0.1"
 url = "*"
 
 [dependencies.notify-rust]

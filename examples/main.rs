@@ -1,11 +1,9 @@
 extern crate notify_rust;
-extern crate url;
-extern crate hyper;
-extern crate rustc_serialize;
-
-mod config;
-mod dvb;
 use notify_rust::Notification;
+
+extern crate dvbrs;
+use dvbrs::*;
+
 
 fn run() {
     let config::Config{sleep_time:_, stations:stations} = config::read_config();

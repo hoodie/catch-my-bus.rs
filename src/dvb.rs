@@ -1,31 +1,26 @@
-#![allow(unused_imports)]
-extern crate url;
-extern crate hyper;
-extern crate rustc_serialize;
-extern crate time;
-
 use std::fs::File;
 use std::io::Read;
 use std::path::{Path};
-use std::collections::HashMap;
 use url::{Url};
-use hyper::Client;
+use std::collections::HashMap;
 use rustc_serialize::json::Json;
-
+use hyper::{Client, Ok};
+use hyper::status::StatusCode;
 
 const VVO_URL:&'static str = "http://widgets.vvo-online.de/abfahrtsmonitor/Abfahrten.do?ort=Dresden&vz=0&hst=";
 
 #[allow(dead_code)]
-fn get_content(url: Url) -> Result<String, hyper::status::StatusCode>
+#[allow(unused)]
+fn get_content(url: Url) -> Result<String, StatusCode>
 {
     let mut client = Client::new();
     let mut res = client.get(url).send().unwrap();
     match res.status
     {
-        hyper::Ok => {
+        StatusCode::Ok => {
             let mut body = String::new();
             res.read_to_string(&mut body).unwrap();
-            return Ok(body)
+            return Result::Ok(body)
         },
         _ => (Err(res.status)),
     }
@@ -42,7 +37,7 @@ fn get_content_offline() -> String
     string
 }
 
-pub fn get_station_json(station: &str) -> Result<Json,hyper::status::StatusCode>
+pub fn get_station_json(station: &str) -> Result<Json,StatusCode>
 {
     #![allow(unused_variables)]
     let url: Url = Url::parse(
@@ -50,8 +45,10 @@ pub fn get_station_json(station: &str) -> Result<Json,hyper::status::StatusCode>
         ).unwrap();
     //println!("getting \"{}\" ({})", &station, &url);
     return get_content(url).map(|str| Json::from_str(&str).unwrap());
+
 }
 
+#[allow(unused)]
 pub fn group_by_line(data: &Json) -> HashMap<String, Vec<String>>
 {
     let mut map: HashMap<String, Vec<String>> = HashMap::new();
@@ -70,4 +67,3 @@ pub fn group_by_line(data: &Json) -> HashMap<String, Vec<String>>
     }
     return map;
 }
-

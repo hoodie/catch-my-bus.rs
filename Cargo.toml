@@ -3,13 +3,18 @@ name = "catch_my_bus"
 version = "0.1.0"
 authors = ["Hendrik Sollich <hendrik@hoodie.de>"]
 
+[lib]
+name = "dvbrs"
+
 [dependencies]
 hyper = "0.5"
 rustc-serialize = "0.3"
-toml = "0.1"
 time = "0.1"
 url = "*"
 
+[dependencies.toml]
+git = "https://github.com/alexcrichton/toml-rs.git"
+
 [dependencies.notify-rust]
-git = "https://github.com/hoodie/notify-rust.git"
+path = "../notify-rust"
 

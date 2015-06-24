@@ -1,0 +1,1 @@
+[["85","Striesen","11"],["85","Löbtau Süd","11"],["85","Striesen","29"],["85","Löbtau Süd","31"],["85","Striesen","49"],["85","Löbtau Süd","51"],["85","Striesen","69"],["85","Löbtau Süd","71"],["85","Btf. Gruna","79"],["85","Striesen","90"]]

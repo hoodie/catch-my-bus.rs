@@ -1,0 +1,1 @@
+[["333","Hetzdorf-Hutha","1"],["S2","Pirna","1"],["10","Niedersedlitz","3"],["3","Wilder Mann","3"],["66","Freital-Deuben","4"],["RE50","Leipzig Hbf","4"],["333","Dresden Ammonstraße","4"],["261","Sebnitz","5"],["8","Südvorstadt","6"],["66","Lockwitz","7"]]

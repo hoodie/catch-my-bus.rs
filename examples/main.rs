@@ -6,7 +6,7 @@ use dvbrs::*;
 
 
 fn run() {
-    let config::Config{sleep_time:_, stations:stations} = config::read_config();
+    let config::Config{sleep_time:_, stations} = config::read_config();
     loop{
         for station in &stations{
             match dvb::get_station_json(station){
@@ -43,7 +43,7 @@ fn main()
 {
     thread::spawn(move||{run()});
     println!("Press enter to exit.");
-    let mut devnull= String::new();
-    std::io::stdin().read_line(&mut devnull);
+    let mut _devnull = String::new();
+    std::io::stdin().read_line(&mut _devnull);
     println!("Thank you for choosing catch_my_bus-rs.");
 }

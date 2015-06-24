@@ -7,6 +7,6 @@ pub mod dvb;
 pub mod config;
 
 #[test]
-fn it_works(){
-
+fn getting_station(){
+    assert!(dvb::get_station_json("Slub").is_ok());
 }

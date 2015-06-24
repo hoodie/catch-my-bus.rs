@@ -7,11 +7,8 @@ use rustc_serialize::json::Json;
 use hyper::{Client, Ok};
 use hyper::status::StatusCode;
 
-const VVO_URL:&'static str = "http://widgets.vvo-online.de/abfahrtsmonitor/Abfahrten.do?ort=Dresden&vz=0&hst=";
-
-#[allow(dead_code)]
 #[allow(unused)]
-fn get_content(url: Url) -> Result<String, StatusCode>
+fn request(url: Url) -> Result<String, StatusCode>
 {
     let mut client = Client::new();
     let mut res = client.get(url).send().unwrap();
@@ -27,6 +24,11 @@ fn get_content(url: Url) -> Result<String, StatusCode>
     // Read the Response.
 }
 
+fn url(url:String) -> Url
+{
+    Url::parse( &(url) ).unwrap()
+}
+
 #[allow(unused)]
 fn get_content_offline() -> String
 {
@@ -37,15 +39,12 @@ fn get_content_offline() -> String
     string
 }
 
+
 pub fn get_station_json(station: &str) -> Result<Json,StatusCode>
 {
-    #![allow(unused_variables)]
-    let url: Url = Url::parse(
-        &(VVO_URL.to_string() + station)
-        ).unwrap();
-    //println!("getting \"{}\" ({})", &station, &url);
-    return get_content(url).map(|str| Json::from_str(&str).unwrap());
-
+    let vvo_url = "http://widgets.vvo-online.de/abfahrtsmonitor/Abfahrten.do?ort=Dresden&vz=0&hst=";
+    let url = url(vvo_url.to_string() + station);
+    return request(url).map(|str| Json::from_str(&str).unwrap());
 }
 
 #[allow(unused)]

@@ -9,7 +9,7 @@ fn run() {
     let config::Config{sleep_time:_, stations} = config::read_config();
     loop{
         for station in &stations{
-            match dvb::get_station_json(station){
+            match dvb::get_monitor(station){
                 Ok(json) =>{
                     let map = dvb::group_by_line(&json);
                     for (k, v) in map{

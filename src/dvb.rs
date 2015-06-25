@@ -6,7 +6,7 @@ use std::collections::HashMap;
 use rustc_serialize::json::Json;
 use hyper::{Client, Ok};
 use hyper::status::StatusCode;
-use datetime::local::{DatePiece,LocalDateTime};
+use datetime::local::*;
 
 #[allow(unused)]
 fn request(url: Url) -> Result<String, StatusCode>
@@ -64,22 +64,48 @@ pub fn find_station(search_term:&str) -> Result<Json, StatusCode>
     request(url).map(|str| Json::from_str(&str).unwrap())
 }
 
+pub enum DepArr{ Dep, Arr }
+pub struct RouteRequest
+{
+    pub origin:&'static str,
+    pub destination:&'static str,
+    pub city_origin:&'static str,
+    pub city_destination:&'static str,
+    pub time:LocalDateTime,
+    pub deparr:DepArr
+}
+
+impl Default for RouteRequest
+{ fn default() -> RouteRequest{ RouteRequest{city_origin:"Dresden", city_destination:"Dresden", origin:"", destination:"", time:LocalDateTime::now(), deparr:DepArr::Dep} }}
+
+impl RouteRequest
+{
+    pub fn from_to(origin:&'static str, destination:&'static str) -> RouteRequest{
+        RouteRequest{
+            origin:origin,
+            destination:destination,
+            .. RouteRequest::default()
+        }
+    }
+}
+
+impl ToString for DepArr
+{
+    fn to_string(&self) -> String
+    {
+        match self {
+            &DepArr::Dep => "dep".to_owned(),
+            &DepArr::Arr => "arr".to_owned()
+        }
+    }
+}
+
 //pub fn get_route(origin:&str, destination:&str, city_origin:&str, city_destination:&str, time:i32, deparr:&str)
-pub fn get_route()
-    -> Result<Json, StatusCode>
+pub fn get_route(route:RouteRequest)
+    //-> Result<Json, StatusCode>
 {
     //let base_url = "http://efa.vvo-online.de:8080/dvb/XML_TRIP_REQUEST2";
     let base_url = "http://efa.faplino.de/dvb/XML_TRIP_REQUEST2";
-
-    let day              = 26;
-    let month            = 6;
-    let year             = LocalDateTime::now().year();
-    let hour             = 13;
-    let minute           = 37;
-    let city_origin      = "Dresden";
-    let city_destination = "Dresden";
-    let origin           = "Slub";
-    let destination      = "Hauptbahnhof";
 
     let deparr = "dep"; //"arr", "dep"
     
@@ -112,19 +138,21 @@ pub fn get_route()
                 &outputFormat=JSON\
                 &coordOutputFormat=WGS84\
                 &coordOutputFormatTail=0",                  
-                base=base_url,
-                deparr= deparr,
-                year = year ,
-                month = month ,
-                day = day ,
-                hour = hour ,
-                minute = minute ,
-                city_origin = city_origin ,
-                city_destination = city_destination ,
-                origin = origin ,
-                destination = destination ));
+
+                base             = base_url,
+                deparr           = route.deparr.to_string(),
+                year             = route.time.year(),
+                month            = route.time.month() as i32 + 1, // january = 0
+                day              = route.time.day(),
+                hour             = route.time.hour(),
+                minute           = route.time.minute(),
+                city_origin      = route.city_origin ,
+                city_destination = route.city_destination ,
+                origin           = route.origin ,
+                destination      = route.destination ));
 //}}}
-    request(url).map(|str| Json::from_str(&str).unwrap())
+    println!("{:?}", url.query_pairs().unwrap());
+    //request(url).map(|str| Json::from_str(&str).unwrap())
 }
 
 pub fn group_by_line(data: &Json) -> HashMap<String, Vec<String>>

@@ -39,12 +39,12 @@ fn get_content_offline() -> String
     string
 }
 
-pub fn get_monitor(station: &str) -> Result<Json,StatusCode>
+pub fn get_monitor(station: &str, city:&str) -> Result<Json,StatusCode>
 {
     let base_url = "http://widgets.vvo-online.de/abfahrtsmonitor/Abfahrten.do";
     let url = url(format!("{base}?ort={city}&vz=0&hst={station}",
                           base=base_url,
-                          city="Dresden",
+                          city=city,
                           station=station));
     request(url).map(|str| Json::from_str(&str).unwrap())
 }
@@ -60,6 +60,68 @@ pub fn find_station(search_term:&str) -> Result<Json, StatusCode>
                 &coordOutputFormat=WGS84\
                 &coordOutputFormatTail=0",
                 base=base_url, lsa=1, search=search_term));
+    request(url).map(|str| Json::from_str(&str).unwrap())
+}
+
+//pub fn get_route(origin:&str, destination:&str, city_origin:&str, city_destination:&str, time:i32, deparr:&str)
+pub fn get_route() -> Result<Json,StatusCode>
+{
+    //let base_url = "http://efa.vvo-online.de:8080/dvb/XML_TRIP_REQUEST2";
+    let base_url = "http://efa.faplino.de/dvb/XML_TRIP_REQUEST2";
+
+    let day              = 26;
+    let month            = 6;
+    let year             = 2015;
+    let hour             = 13;
+    let minute           = 37;
+    let city_origin      = "Dresden";
+    let city_destination = "Dresden";
+    let origin           = "Slub";
+    let destination      = "Hauptbahnhof";
+
+    let deparr = "dep"; //"arr", "dep"
+    
+    let url =
+    // {{{
+        url(format!("{base}?\
+                sessionID=0\
+                &requestID=0\
+                &language=de\
+                &execInst=normal\
+                &command=\
+                &ptOptionsActive=-1\
+                &itOptionsActive=\
+                &itDateDay={day}\
+                &itDateMonth={month}\
+                &itDateYear={year}\
+                &place_origin={city_origin}\
+                &placeState_origin=empty\
+                &type_origin=stop\
+                &name_origin={origin}\
+                &nameState_origin=empty\
+                &place_destination={city_destination}\
+                &placeState_destination=empty\
+                &type_destination=stop\
+                &name_destination={destination}\
+                &nameState_destination=empty\
+                &itdTripDateTimeDepArr={deparr}\
+                &itdTimeHour={hour}\
+                &idtTimeMinute={minute}\
+                &outputFormat=JSON\
+                &coordOutputFormat=WGS84\
+                &coordOutputFormatTail=0",                  
+                base=base_url,
+                deparr= deparr,
+                year = year ,
+                month = month ,
+                day = day ,
+                hour = hour ,
+                minute = minute ,
+                city_origin = city_origin ,
+                city_destination = city_destination ,
+                origin = origin ,
+                destination = destination ));
+//}}}
     request(url).map(|str| Json::from_str(&str).unwrap())
 }
 

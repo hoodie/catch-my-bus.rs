@@ -6,6 +6,7 @@ use std::collections::HashMap;
 use rustc_serialize::json::Json;
 use hyper::{Client, Ok};
 use hyper::status::StatusCode;
+use datetime::local::{DatePiece,LocalDateTime};
 
 #[allow(unused)]
 fn request(url: Url) -> Result<String, StatusCode>
@@ -39,7 +40,7 @@ fn get_content_offline() -> String
     string
 }
 
-pub fn get_monitor(station: &str, city:&str) -> Result<Json,StatusCode>
+pub fn get_monitor(station: &str, city:&str) -> Result<Json, StatusCode>
 {
     let base_url = "http://widgets.vvo-online.de/abfahrtsmonitor/Abfahrten.do";
     let url = url(format!("{base}?ort={city}&vz=0&hst={station}",
@@ -64,14 +65,15 @@ pub fn find_station(search_term:&str) -> Result<Json, StatusCode>
 }
 
 //pub fn get_route(origin:&str, destination:&str, city_origin:&str, city_destination:&str, time:i32, deparr:&str)
-pub fn get_route() -> Result<Json,StatusCode>
+pub fn get_route()
+    -> Result<Json, StatusCode>
 {
     //let base_url = "http://efa.vvo-online.de:8080/dvb/XML_TRIP_REQUEST2";
     let base_url = "http://efa.faplino.de/dvb/XML_TRIP_REQUEST2";
 
     let day              = 26;
     let month            = 6;
-    let year             = 2015;
+    let year             = LocalDateTime::now().year();
     let hour             = 13;
     let minute           = 37;
     let city_origin      = "Dresden";

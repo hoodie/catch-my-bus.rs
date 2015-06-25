@@ -7,13 +7,11 @@ authors = ["Hendrik Sollich <hendrik@hoodie.de>"]
 name = "dvbrs"
 
 [dependencies]
-hyper = "0.5"
+hyper = "0.6"
 rustc-serialize = "0.3"
 time = "0.1"
-url = "*"
-
-[dependencies.toml]
-git = "https://github.com/alexcrichton/toml-rs.git"
+url = "0.2"
+toml = "0.1"
 
 [dependencies.notify-rust]
 path = "../notify-rust"

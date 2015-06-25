@@ -1,7 +1,8 @@
 stations = [
   #"Münchnerplatz",
   #"Nürnberger Platz",
-  "Hauptbahnhof",
+  #"Hauptbahnhof",
+  "Slub",
   "Helmholzstraße",
 ]
 
